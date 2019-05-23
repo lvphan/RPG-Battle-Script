@@ -1,4 +1,7 @@
 import random
+import pprint
+from .magic import Spell
+
 
 class bcolors:
     HEADER = '\033[95m'
@@ -10,7 +13,7 @@ class bcolors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
 
-class player:
+class Player:
     def __init__(self, hp, mp, atk, df, magic):
         self.max_hp = hp
         self.hp = hp
@@ -29,16 +32,16 @@ class player:
     def generate_damage(self):
         return random.randrange(self.atk_low, self.atk_high)
 
-    def generate_magic_damage(self, i):
-        magic_low = self.magic[i]["Damage"] - 5
-        magic_high = self.magic[i]["Damage"] + 5
-        return random.randrange(magic_low, magic_high)
-
     def take_damage(self, dmg):
         self.hp -= dmg
         if self.hp < 0:
             self.hp = 0
         return self.hp
+
+    def heal(self, dmg):
+        self.hp += dmg
+        if self.hp > self.max_hp:
+            self.hp = self.max_hp
 
     def get_hp(self):
         return self.hp
@@ -55,12 +58,6 @@ class player:
     def reduce_mp(self, cost):
         self.mp -= cost
 
-    def get_spell_name(self, i):
-        return self.magic[i]["Name"]
-
-    def get_spell_cost(self, i):
-        return self.magic[i]["Cost"]
-
     def choose_action(self):
         i = 1
         print(bcolors.OKBLUE + bcolors.BOLD + "Actions" + bcolors.ENDC)
@@ -72,7 +69,5 @@ class player:
         i = 1
         print(bcolors.OKBLUE + bcolors.BOLD + "Spells" + bcolors.ENDC)
         for spell in self.magic:
-            print(str(i) + ":", spell["Name"], "(Cost:", spell["Cost"] + ")")
+            print(str(i) + ":", spell.name, "(Cost:", str(spell.cost) + ")")
             i += 1
-
-
