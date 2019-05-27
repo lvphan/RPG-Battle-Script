@@ -7,3 +7,6 @@ battle script. I did, however, try and change up somethings such as adding and c
 # Discoveries
 * While working on this I discovered that HP Bars and MP Bars stay consistent on Mac OS but not on Windows OS
 
+![Running script on Mac](/images/mac.png?raw=true)
+
+![Running script on PC](/images/pc.png?raw=true)
