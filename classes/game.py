@@ -56,6 +56,7 @@ class Player:
 
     def choose_action(self):
         i = 1
+
         print("\n" + bcolors.BOLD + self.name + bcolors.ENDC)
         print(bcolors.OKBLUE + bcolors.BOLD + "ACTIONS:" + bcolors.ENDC)
         for item in self.actions:
@@ -125,17 +126,27 @@ class Player:
         else:
             current_mp = mp_string
 
-    #I noticed that depending on the length of the player's name, it would have an effect on the HP bars and how they
-    #lined up. So I added this to adjusted for the longest name "All Might" which is 10 characters long including the
-    #colon.
-        if len(self.name) < 10:
-            while len(self.name) < 10:
+        '''I noticed that depending on the length of the player's name, it would have an effect on the HP bars and how 
+        they lined up. So I added this to adjusted for the longest name "All Might" which is 9 characters long. 
+        However, this does mean that this would need to be changed when the longer of the names is changed.'''
+        if len(self.name) < 9:
+            while len(self.name) < 9:
                 self.name += " "
 
 
-        print(bcolors.BOLD + self.name + "    " +
-              current_hp + " |" + bcolors.OKGREEN + hp_bar + bcolors.ENDC + "|   "
-              + current_mp + " |" + bcolors.OKBLUE + mp_bar + "|" + bcolors.ENDC)
+        print(bcolors.BOLD + self.name + "    "+
+              current_hp + bcolors.OKGREEN + " " + hp_bar + bcolors.ENDC + " " + bcolors.BOLD
+              + current_mp + " " + bcolors.OKBLUE + mp_bar  + bcolors.ENDC)
+
+    def choose_target(self, enemies):
+        i = 1
+        print("\n" + bcolors.FAIL + bcolors.BOLD + "TARGET:" + bcolors.ENDC)
+        for enemy in enemies:
+            if enemy.get_hp() != 0:
+                print("    " + str(i) + ".", enemy.name)
+                i += 1
+        choice = int(input("Choose Target: ")) - 1
+        return choice
 
     def get_enemy_stats(self):
         hp_bar = ""
@@ -162,5 +173,12 @@ class Player:
         else:
             current_hp = hp_string
 
-        print(bcolors.BOLD + self.name + "        " +
-          current_hp + " |" + bcolors.FAIL + hp_bar + bcolors.ENDC + "|   ")
+        '''I noticed that depending on the length of the player's name, it would have an effect on the HP bars and how 
+        they lined up. So I added this to adjusted for the longest name "Spinner" which is 7 characters. However, this 
+        does mean that this would need to be changed when the longer of the names is changed.'''
+        if len(self.name) < 7:
+            while len(self.name) < 7:
+                self.name += " "
+
+        print(bcolors.BOLD + self.name + "      " +
+          current_hp + " " + bcolors.FAIL + hp_bar + bcolors.ENDC)
