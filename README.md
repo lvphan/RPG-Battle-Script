@@ -7,6 +7,9 @@ battle script. I did, however, try and change up somethings such as adding and c
 # Discoveries
 * While working on this I discovered that HP Bars and MP Bars stay consistent on Mac OS but not on Windows OS
 
-![Running script on Mac](/images/mac.png?raw=true)
+![Running script on Mac](/images/mac_hp_bars.png?raw=true)
 
-![Running script on PC](/images/pc.png?raw=true)
+![Running script on PC](/images/pc_hp_bars.png?raw=true)
+
+* The game will continue to run after all enemies have been defeated :(.
+And since the code is similar in the way it checks if players have been defeated, I am assuming it is the same for players.
