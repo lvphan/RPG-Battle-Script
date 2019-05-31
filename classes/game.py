@@ -182,3 +182,16 @@ class Player:
 
         print(bcolors.BOLD + self.name + "      " +
           current_hp + " " + bcolors.FAIL + hp_bar + bcolors.ENDC)
+
+    def choose_enemy_spell(self):
+        # Choses a random spell between 0 and x, the length of the magic list
+        magic_choice = random.randrange(0, len(self.magic))
+        spell = self.magic[magic_choice]
+        magic_dmg = spell.generate_damage()
+
+        pct = self.hp / self.max_hp * 100
+
+        if self.mp < spell.cost or spell.type == "Light" and pct > 50:
+            self.choose_enemy_spell()
+        else:
+            return spell, magic_dmg

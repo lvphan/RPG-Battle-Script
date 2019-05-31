@@ -17,6 +17,7 @@ cure = Spell("Cure", 10, 15, "Light")
 cure_p = Spell("Cure +", 15, 20, "Light")
 
 player1_spells = [meteor, typhoon, lighting, ultra, cure, cure_p]
+enemy_spells = [meteor, lighting, cure]
 
 
 ###Items###
@@ -41,12 +42,12 @@ player1_items = [{"Item": red_potion, "Quantity": 10},{"Item": orange_potion, "Q
 
 ###Player & Enemy###
 #Instantiate Players
-player1 = Player("Deku", 1000, 200, 10000, 100, player1_spells, player1_items)
+player1 = Player("Deku", 1000, 200, 1000, 100, player1_spells, player1_items)
 player2 = Player("Todoroki", 1000, 200, 125, 125, player1_spells, player1_items)
 player3 = Player("All-Might", 1000, 200, 200, 200, player1_spells, player1_items)
 #Instantiate Enemies
-enemy1 = Player("Stain", 2500, 200, 100, 100, [], [])
-enemy2 = Player("Spinner", 1000, 200, 50, 50, [], [])
+enemy1 = Player("Stain", 2500, 200, 100, 100, enemy_spells, [])
+enemy2 = Player("Spinner", 1000, 200, 50, 50, enemy_spells, [])
 
 
 players = [player1, player2, player3]
@@ -75,6 +76,7 @@ while running:
         if index == 0:
             dmg = player.generate_damage()
             chosen_enemy = player.choose_target(enemies)
+
 
             enemies[chosen_enemy].take_damage(dmg)
             print("\n" + player.name.replace(" ", "") + " attacked " + enemies[chosen_enemy].name.replace(" ", "") + " for", dmg, "points of damage.")
@@ -163,13 +165,7 @@ while running:
                   "Your choices are '1', '2', or '3'."+ bcolors.ENDC)
             continue
 
-    enemy_choice = 1
-    target = random.randrange(0,3)
-    enemy_dmg = enemies[0].generate_damage()
-
-    players[target].take_damage(enemy_dmg)
-    print(bcolors.FAIL + enemies[chosen_enemy].name.replace(" ", ""), " attacked ", player.name.replace(" ", ""), "for", enemy_dmg, "points of damage." + bcolors.ENDC)
-
+    #Check if battle is over
     defeated_enemies = 0
     defeated_players = 0
 
@@ -181,12 +177,57 @@ while running:
         if player.get_hp() == 0:
             defeated_players += 1
 
+    #Check if Player won
     if defeated_enemies == 2:
         print(bcolors.OKGREEN + "THE ENEMIES HAVE BEEN SLAIN!" + bcolors.ENDC)
         running = False
+    #Check if Enemy won
     elif defeated_players == 3:
         print(bcolors.FAIL + "YOUR TEAM HAS BEEN SLAIN" + bcolors.ENDC)
         running = False
+    #TIE?
     elif defeated_players == 3 and defeated_enemies == 2:
         print(bcolors.FAIL + "???")
         running = False
+
+    '''
+    if len(enemies) == 0:
+        print(bcolors.OKGREEN + "THE ENEMIES HAVE BEEN SLAIN!" + bcolors.ENDC)
+        running = False
+    elif len(players) == 0:
+        print(bcolors.FAIL + "YOUR TEAM HAS BEEN SLAIN" + bcolors.ENDC)
+        running = False
+
+    print("\n")
+    '''
+
+    #Enemy Attack Phase
+    for enemy in enemies:
+        enemy_choice = random.randrange(0, 2)
+
+        if enemy_choice == 0:
+            target = random.randrange(0, 3)
+            enemy_dmg = enemy.generate_damage()
+
+            players[target].take_damage(enemy_dmg)
+            print(bcolors.FAIL + enemy.name.replace(" ", "") + " attacked " +
+                  players[target].name.replace(" ", "") + " for", enemy_dmg, "points of damage." + bcolors.ENDC)
+
+        elif enemy_choice == 1:
+            spell, magic_dmg = enemy.choose_enemy_spell()
+            enemy.reduce_mp(spell.cost)
+
+            if spell.type == "Light" and enemy.hp is not 100:
+                enemy.heal(spell.damage)
+                print(bcolors.OKBLUE + spell.name + " heals ", enemy.name.replace(" ",""), " for ", str(spell.damage), "HP." + bcolors.ENDC)
+            elif spell.type == "Dark":
+
+                target = random.randrange(0, 3)
+
+                players[target].take_damage(magic_dmg)
+                print(bcolors.OKBLUE + enemy.name.replace(" ", "") + "'s " + spell.name + " deals " + str(magic_dmg)
+                      + " points of damage to", players[target].name.replace(" ", ""),  bcolors.ENDC)
+
+                if players[target].get_hp() == 0:
+                    print(players[target].name.replace(" ", "") + " has fallen.")
+                    del players[target]
